@@ -14,3 +14,6 @@ ndk-context = "0.1.1"
 
 [package.metadata.android.sdk]
 min_sdk_version = 21
+
+[[package.metadata.android.uses_permission]]
+name = "android.permission.CAMERA"
