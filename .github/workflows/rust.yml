@@ -1,0 +1,37 @@
+name: Rust Android and iOS Test
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - uses: nttld/setup-ndk@v1
+        with:
+          ndk-version: r25b
+
+      - name: Install Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+
+      - name: Install Rust target for Android
+        run: rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android
+
+      - name: Run Android unit tests
+        run: cargo check --target=aarch64-linux-android
+        env:
+          ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
+
+      - name: Install Rust target for iOS
+        run: rustup target add aarch64-apple-darwin
+
+      - name: Run iOS unit tests
+        run: cargo check --target=aarch64-apple-darwin
