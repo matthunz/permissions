@@ -1,9 +1,17 @@
+use crate::{Permission, Permissions};
 use android_activity::AndroidApp;
 use jni::{
-    objects::{JClass, JObject, JValue},
-    sys::{jboolean, jobject, jstring},
-    JNIEnv, JavaVM,
+    objects::{JObject, JValue},
+    sys::{jobject, jstring}, JavaVM,
 };
+
+impl Permissions for AndroidApp {
+    fn is_granted(&self, permission: Permission) -> bool {
+        match permission {
+            Permission::Camera => is_granted("android.permission.CAMERA"),
+        }
+    }
+}
 
 pub fn is_granted(permission: &str) -> bool {
     let cx = ndk_context::android_context();
@@ -45,7 +53,7 @@ pub fn request(android_app: &AndroidApp, permission: &str) {
     }
 
     let activity = unsafe { JObject::from_raw(android_app.activity_as_ptr() as jobject) };
-    let res = env
+    let _res = env
         .call_method(
             activity,
             "requestPermissions",

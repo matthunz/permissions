@@ -10,3 +10,6 @@ ndk-context = "0.1.1"
 
 [target.'cfg(target_os = "ios")'.dependencies]
 objc = "0.2.7"
+
+[package.metadata.docs.rs]
+targets = ["aarch64-apple-ios", "aarch64-linux-android"]
